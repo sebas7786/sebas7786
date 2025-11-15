@@ -995,13 +995,79 @@ body {
     </div>
     <?php endif; ?>
 
+    <!-- Sección: Aclaraciones -->
+    <?php if (!empty($aclaraciones)): ?>
+    <div class="sicop-section">
+        <div class="sicop-section-header">
+            [ 7. Aclaraciones ]
+        </div>
+        <div class="sicop-section-body">
+            <p style="margin-bottom: 15px;">
+                <strong>Total de aclaraciones:</strong> <?php echo count($aclaraciones); ?>
+                <?php
+                $respondidas = array_filter($aclaraciones, function($acl) {
+                    return !empty($acl['fecha_respuesta']) || strtolower($acl['estado_respuesta'] ?? '') === 'respondida';
+                });
+                $pendientes = count($aclaraciones) - count($respondidas);
+                ?>
+                <span style="margin-left: 15px; color: #28a745;">✓ Respondidas: <?php echo count($respondidas); ?></span>
+                <span style="margin-left: 10px; color: #dc3545;">⏳ Pendientes: <?php echo $pendientes; ?></span>
+            </p>
+            <table class="ofertas-table">
+                <thead>
+                    <tr>
+                        <th>Fecha Solicitud</th>
+                        <th>N° Aclaración</th>
+                        <th>Solicitante</th>
+                        <th>Cédula Empresa</th>
+                        <th>Estado</th>
+                        <th>N° Respuesta</th>
+                        <th>Fecha Respuesta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($aclaraciones as $acl): ?>
+                    <tr>
+                        <td><?php echo formatearFechaHora($acl['fecha_solicitud'] ?? ''); ?></td>
+                        <td><strong><?php echo htmlspecialchars($acl['numero_aclaracion'] ?? '-'); ?></strong></td>
+                        <td><?php echo htmlspecialchars($acl['solicitante'] ?? '-'); ?></td>
+                        <td><?php echo htmlspecialchars($acl['cedula_empresa_proveedora'] ?? '-'); ?></td>
+                        <td>
+                            <?php
+                            $estado_acl = strtolower($acl['estado_respuesta'] ?? '');
+                            $tiene_respuesta = !empty($acl['fecha_respuesta']);
+                            if ($tiene_respuesta || $estado_acl === 'respondida') {
+                                echo '<span class="estado-badge abierta" style="background-color: #d4edda; color: #155724;">✓ Respondida</span>';
+                            } else {
+                                echo '<span class="estado-badge proximo" style="background-color: #fff3cd; color: #856404;">⏳ Pendiente</span>';
+                            }
+                            ?>
+                        </td>
+                        <td><?php echo htmlspecialchars($acl['numero_respuesta'] ?? '-'); ?></td>
+                        <td>
+                            <?php
+                            if (!empty($acl['fecha_respuesta'])) {
+                                echo '<strong style="color: #28a745;">' . formatearFechaHora($acl['fecha_respuesta']) . '</strong>';
+                            } else {
+                                echo '<span style="color: #999;">Sin responder</span>';
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
-    <!-- ⭐ SECCIÓN 7: PARTIDAS - CORREGIDA PARA v14.2 -->
+    <!-- ⭐ SECCIÓN 8: PARTIDAS - CORREGIDA PARA v14.2 -->
     <!-- ═══════════════════════════════════════════════════════════════════════ -->
     <?php if ($tabla_partidas_existe && !empty($partidas)): ?>
     <div class="sicop-section">
         <div class="sicop-section-header">
-            [ 7. Información de bien, servicio u obra ]
+            [ 8. Información de bien, servicio u obra ]
         </div>
         <div class="sicop-section-body">
             <p style="margin-bottom: 15px;"><strong>Total de líneas:</strong> <?php echo count($partidas); ?></p>
@@ -1133,7 +1199,7 @@ body {
     <?php elseif ($tabla_partidas_existe && empty($partidas)): ?>
     <div class="sicop-section">
         <div class="sicop-section-header">
-            [ 7. Información de bien, servicio u obra ]
+            [ 8. Información de bien, servicio u obra ]
         </div>
         <div class="sicop-section-body">
             <div class="info-note">
