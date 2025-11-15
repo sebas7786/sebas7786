@@ -163,6 +163,21 @@ try {
         error_log("Error al consultar recursos: " . $e->getMessage());
     }
 
+    // Obtener aclaraciones
+    $aclaraciones = [];
+    try {
+        $check_table = $conn->query("SHOW TABLES LIKE 'aclaraciones_licitacion'");
+        if ($check_table->rowCount() > 0 && !empty($licitacion['numero_sicop'])) {
+            $query = "SELECT * FROM aclaraciones_licitacion WHERE numero_cartel = :numero_sicop ORDER BY fecha_solicitud DESC";
+            $stmt_aclar = $conn->prepare($query);
+            $stmt_aclar->bindParam(':numero_sicop', $licitacion['numero_sicop']);
+            $stmt_aclar->execute();
+            $aclaraciones = $stmt_aclar->fetchAll(PDO::FETCH_ASSOC);
+        }
+    } catch (PDOException $e) {
+        error_log("Error al consultar aclaraciones: " . $e->getMessage());
+    }
+
 } catch (PDOException $e) {
     die("Error al obtener detalles de la licitación: " . $e->getMessage());
 }
