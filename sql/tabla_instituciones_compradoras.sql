@@ -1,0 +1,31 @@
+-- ============================================================================
+-- TABLA: instituciones_compradoras
+-- ============================================================================
+-- Descripción: Instituciones que publican licitaciones (compradoras)
+-- Fuente: Archivo CSV "Instituciones" del Observatorio SICOP
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS `instituciones_compradoras` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `cedula` VARCHAR(20) NOT NULL UNIQUE,
+    `nombre_institucion` VARCHAR(255) NULL,
+    `direccion` TEXT NULL,
+    `telefono` VARCHAR(50) NULL,
+    `representante` VARCHAR(255) NULL,
+    `codigo_postal` VARCHAR(20) NULL,
+    `provincia` VARCHAR(100) NULL,
+    `canton` VARCHAR(100) NULL,
+    `distrito` VARCHAR(100) NULL,
+    `fecha_importacion` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `actualizado` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    INDEX `idx_cedula` (`cedula`),
+    INDEX `idx_nombre` (`nombre_institucion`),
+    INDEX `idx_provincia` (`provincia`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ============================================================================
+-- Instrucciones:
+-- ============================================================================
+-- mysql -u usuario -p nombre_bd < sql/tabla_instituciones_compradoras.sql
+-- ============================================================================
