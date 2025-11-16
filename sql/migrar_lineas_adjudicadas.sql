@@ -53,6 +53,37 @@ CREATE TABLE IF NOT EXISTS `lineas_adjudicadas` (
 
 -- 3. AGREGAR columnas faltantes SI YA EXISTE LA TABLA (seguro, no da error si ya existen)
 
+-- Identificadores
+ALTER TABLE `lineas_adjudicadas`
+ADD COLUMN IF NOT EXISTS `numero_sicop` VARCHAR(20) NOT NULL AFTER `id`;
+
+ALTER TABLE `lineas_adjudicadas`
+ADD COLUMN IF NOT EXISTS `numero_oferta` VARCHAR(50) NULL AFTER `numero_sicop`;
+
+ALTER TABLE `lineas_adjudicadas`
+ADD COLUMN IF NOT EXISTS `numero_linea` INT NULL AFTER `numero_oferta`;
+
+ALTER TABLE `lineas_adjudicadas`
+ADD COLUMN IF NOT EXISTS `numero_acto` VARCHAR(50) NULL AFTER `numero_linea`;
+
+-- Proveedor
+ALTER TABLE `lineas_adjudicadas`
+ADD COLUMN IF NOT EXISTS `cedula_proveedor` VARCHAR(20) NULL AFTER `numero_acto`;
+
+-- Producto
+ALTER TABLE `lineas_adjudicadas`
+ADD COLUMN IF NOT EXISTS `codigo_producto` VARCHAR(100) NULL AFTER `cedula_proveedor`;
+
+-- Cantidades y montos
+ALTER TABLE `lineas_adjudicadas`
+ADD COLUMN IF NOT EXISTS `cantidad_adjudicada` DECIMAL(15,4) NULL AFTER `codigo_producto`;
+
+ALTER TABLE `lineas_adjudicadas`
+ADD COLUMN IF NOT EXISTS `precio_unitario_adjudicado` DECIMAL(15,4) NULL AFTER `cantidad_adjudicada`;
+
+ALTER TABLE `lineas_adjudicadas`
+ADD COLUMN IF NOT EXISTS `tipo_moneda` VARCHAR(10) NULL DEFAULT 'CRC' AFTER `precio_unitario_adjudicado`;
+
 -- Ajustes financieros
 ALTER TABLE `lineas_adjudicadas`
 ADD COLUMN IF NOT EXISTS `descuento` DECIMAL(15,4) NULL AFTER `tipo_moneda`;
@@ -73,14 +104,28 @@ ADD COLUMN IF NOT EXISTS `tipo_cambio_crc` DECIMAL(10,4) NULL AFTER `acarreos`;
 ALTER TABLE `lineas_adjudicadas`
 ADD COLUMN IF NOT EXISTS `tipo_cambio_dolar` DECIMAL(10,4) NULL AFTER `tipo_cambio_crc`;
 
--- 4. AGREGAR índice único SI NO EXISTE
--- Primero intentamos eliminarlo por si existe
+-- Metadata
 ALTER TABLE `lineas_adjudicadas`
-DROP INDEX IF EXISTS `unique_linea_adjudicada`;
+ADD COLUMN IF NOT EXISTS `fecha_importacion` TIMESTAMP DEFAULT CURRENT_TIMESTAMP AFTER `tipo_cambio_dolar`;
 
--- Luego lo creamos
 ALTER TABLE `lineas_adjudicadas`
-ADD UNIQUE KEY `unique_linea_adjudicada` (`numero_sicop`, `numero_linea`, `numero_oferta`);
+ADD COLUMN IF NOT EXISTS `actualizado` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `fecha_importacion`;
+
+-- 4. AGREGAR índices SI NO EXISTEN
+
+-- Eliminar índices antiguos si existen
+ALTER TABLE `lineas_adjudicadas` DROP INDEX IF EXISTS `idx_numero_sicop`;
+ALTER TABLE `lineas_adjudicadas` DROP INDEX IF EXISTS `idx_cedula_proveedor`;
+ALTER TABLE `lineas_adjudicadas` DROP INDEX IF EXISTS `idx_numero_oferta`;
+ALTER TABLE `lineas_adjudicadas` DROP INDEX IF EXISTS `idx_numero_linea`;
+ALTER TABLE `lineas_adjudicadas` DROP INDEX IF EXISTS `unique_linea_adjudicada`;
+
+-- Crear índices nuevos
+ALTER TABLE `lineas_adjudicadas` ADD INDEX `idx_numero_sicop` (`numero_sicop`);
+ALTER TABLE `lineas_adjudicadas` ADD INDEX `idx_cedula_proveedor` (`cedula_proveedor`);
+ALTER TABLE `lineas_adjudicadas` ADD INDEX `idx_numero_oferta` (`numero_oferta`);
+ALTER TABLE `lineas_adjudicadas` ADD INDEX `idx_numero_linea` (`numero_linea`);
+ALTER TABLE `lineas_adjudicadas` ADD UNIQUE KEY `unique_linea_adjudicada` (`numero_sicop`, `numero_linea`, `numero_oferta`);
 
 -- ═══════════════════════════════════════════════════════════════════════
 -- VERIFICACIÓN: Ejecuta este query para confirmar que todo está bien
@@ -93,4 +138,9 @@ FROM information_schema.COLUMNS
 WHERE TABLE_SCHEMA = DATABASE()
 AND TABLE_NAME = 'lineas_adjudicadas';
 
--- Debería mostrar aproximadamente 18 columnas
+-- Debería mostrar 18 columnas:
+-- id, numero_sicop, numero_oferta, numero_linea, numero_acto,
+-- cedula_proveedor, codigo_producto, cantidad_adjudicada,
+-- precio_unitario_adjudicado, tipo_moneda, descuento, iva,
+-- otros_impuestos, acarreos, tipo_cambio_crc, tipo_cambio_dolar,
+-- fecha_importacion, actualizado
