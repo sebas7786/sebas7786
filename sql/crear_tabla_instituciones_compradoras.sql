@@ -1,10 +1,10 @@
 -- ============================================================================
--- Tabla: instituciones_proveedoras
--- Descripción: Almacena información de instituciones proveedoras/compradoras
+-- Tabla: instituciones_compradoras
+-- Descripción: Almacena información de instituciones compradoras (las que licitan)
 -- Fuente: Archivo CSV "Instituciones" del Observatorio SICOP
 -- ============================================================================
 
-CREATE TABLE IF NOT EXISTS `instituciones_proveedoras` (
+CREATE TABLE IF NOT EXISTS `instituciones_compradoras` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `cedula` VARCHAR(20) NOT NULL UNIQUE,
     `nombre_institucion` VARCHAR(255) NULL,

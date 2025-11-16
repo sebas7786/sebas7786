@@ -1,9 +1,9 @@
 <?php
 /**
  * ============================================================================
- * VERIFICADOR DE INSTITUCIONES PROVEEDORAS
+ * VERIFICADOR DE INSTITUCIONES COMPRADORAS
  * ============================================================================
- * Dashboard para verificar instituciones importadas
+ * Dashboard para verificar instituciones compradoras importadas
  * ============================================================================
  */
 
@@ -12,7 +12,7 @@ require_once __DIR__ . '/../config/db.php';
 // Verificar si la tabla existe
 $tabla_existe = false;
 try {
-    $check = $conn->query("SHOW TABLES LIKE 'instituciones_proveedoras'");
+    $check = $conn->query("SHOW TABLES LIKE 'instituciones_compradoras'");
     $tabla_existe = $check->rowCount() > 0;
 } catch (PDOException $e) {
     $error = $e->getMessage();
@@ -32,29 +32,29 @@ $por_provincia = [];
 if ($tabla_existe) {
     try {
         // Total de instituciones
-        $stmt = $conn->query("SELECT COUNT(*) as total FROM instituciones_proveedoras");
+        $stmt = $conn->query("SELECT COUNT(*) as total FROM instituciones_compradoras");
         $stats['total'] = $stmt->fetch()['total'];
 
         // Con nombre
-        $stmt = $conn->query("SELECT COUNT(*) as total FROM instituciones_proveedoras WHERE nombre_institucion IS NOT NULL AND nombre_institucion != ''");
+        $stmt = $conn->query("SELECT COUNT(*) as total FROM instituciones_compradoras WHERE nombre_institucion IS NOT NULL AND nombre_institucion != ''");
         $stats['con_nombre'] = $stmt->fetch()['total'];
 
         // Con dirección
-        $stmt = $conn->query("SELECT COUNT(*) as total FROM instituciones_proveedoras WHERE direccion IS NOT NULL AND direccion != ''");
+        $stmt = $conn->query("SELECT COUNT(*) as total FROM instituciones_compradoras WHERE direccion IS NOT NULL AND direccion != ''");
         $stats['con_direccion'] = $stmt->fetch()['total'];
 
         // Con teléfono
-        $stmt = $conn->query("SELECT COUNT(*) as total FROM instituciones_proveedoras WHERE telefono IS NOT NULL AND telefono != ''");
+        $stmt = $conn->query("SELECT COUNT(*) as total FROM instituciones_compradoras WHERE telefono IS NOT NULL AND telefono != ''");
         $stats['con_telefono'] = $stmt->fetch()['total'];
 
         // Instituciones recientes
-        $stmt = $conn->query("SELECT * FROM instituciones_proveedoras ORDER BY fecha_importacion DESC LIMIT 20");
+        $stmt = $conn->query("SELECT * FROM instituciones_compradoras ORDER BY fecha_importacion DESC LIMIT 20");
         $instituciones_recientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Por provincia
         $stmt = $conn->query("
             SELECT provincia, COUNT(*) as total
-            FROM instituciones_proveedoras
+            FROM instituciones_compradoras
             WHERE provincia IS NOT NULL AND provincia != ''
             GROUP BY provincia
             ORDER BY total DESC
@@ -73,7 +73,7 @@ if ($tabla_existe) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verificador de Instituciones</title>
+    <title>Verificador de Instituciones Compradoras</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -195,8 +195,8 @@ if ($tabla_existe) {
 <body>
     <div class="container">
         <div class="header">
-            <h1>🏢 Verificador de Instituciones Proveedoras</h1>
-            <p>Dashboard de instituciones importadas</p>
+            <h1>🏢 Verificador de Instituciones Compradoras</h1>
+            <p>Dashboard de instituciones compradoras importadas</p>
         </div>
 
         <?php if (isset($error)): ?>
@@ -207,8 +207,8 @@ if ($tabla_existe) {
 
         <?php if (!$tabla_existe): ?>
             <div class="error-box">
-                <strong>⚠️ Atención:</strong> La tabla 'instituciones_proveedoras' no existe.
-                <br>Por favor, ejecuta primero el script SQL: <code>sql/crear_tabla_instituciones_proveedoras.sql</code>
+                <strong>⚠️ Atención:</strong> La tabla 'instituciones_compradoras' no existe.
+                <br>Por favor, ejecuta primero el script SQL: <code>sql/crear_tabla_instituciones_compradoras.sql</code>
             </div>
         <?php else: ?>
 

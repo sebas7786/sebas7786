@@ -1,9 +1,9 @@
 <?php
 /**
  * ============================================================================
- * IMPORTADOR DE INSTITUCIONES PROVEEDORAS
+ * IMPORTADOR DE INSTITUCIONES COMPRADORAS
  * ============================================================================
- * Importa instituciones desde archivo CSV del Observatorio SICOP
+ * Importa instituciones compradoras (las que licitan) desde CSV del Observatorio SICOP
  * Formato esperado: Cédula, Nombre Institucion, Direccion, Telefono,
  *                   Representante, Codigo Postal, Provincia, Canton, Distrito
  *
@@ -75,7 +75,7 @@ class ImportadorInstituciones {
             $this->logMensaje("📄 Archivo cargado: " . count($rows) . " instituciones encontradas");
 
             // Preparar statement para INSERT/UPDATE
-            $sql = "INSERT INTO instituciones_proveedoras
+            $sql = "INSERT INTO instituciones_compradoras
                     (cedula, nombre_institucion, direccion, telefono, representante,
                      codigo_postal, provincia, canton, distrito)
                     VALUES
@@ -116,7 +116,7 @@ class ImportadorInstituciones {
 
                 try {
                     // Verificar si existe para contar insertadas vs actualizadas
-                    $check = $this->conn->prepare("SELECT COUNT(*) FROM instituciones_proveedoras WHERE cedula = :cedula");
+                    $check = $this->conn->prepare("SELECT COUNT(*) FROM instituciones_compradoras WHERE cedula = :cedula");
                     $check->bindParam(':cedula', $cedula);
                     $check->execute();
                     $existe = $check->fetchColumn() > 0;
@@ -198,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Importador de Instituciones Proveedoras</title>
+    <title>Importador de Instituciones Compradoras</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -322,7 +322,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['archivo'])) {
 <body>
     <div class="container">
         <div class="header">
-            <h1>🏢 Importador de Instituciones Proveedoras</h1>
+            <h1>🏢 Importador de Instituciones Compradoras</h1>
             <p>Sistema de importación masiva desde Observatorio SICOP</p>
         </div>
 

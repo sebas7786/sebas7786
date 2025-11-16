@@ -1,18 +1,18 @@
-# 🏢 Sistema de Instituciones Proveedoras
+# 🏢 Sistema de Instituciones Compradoras
 
-Sistema de importación y gestión de instituciones proveedoras/compradoras del Observatorio SICOP.
+Sistema de importación y gestión de instituciones compradoras (las que licitan) del Observatorio SICOP.
 
 ## 📋 Descripción
 
-Este sistema permite importar y gestionar información de instituciones que participan en procesos de licitación, facilitando:
+Este sistema permite importar y gestionar información de instituciones COMPRADORAS (las que publican licitaciones), facilitando:
 - Enlazar cédula de institución con nombre completo
 - Mostrar nombre de institución compradora en carteles
-- Filtrar licitaciones por institución
+- Filtrar licitaciones por institución compradora
 - Análisis geográfico por provincia
 
 ## 🗄️ Estructura de Datos
 
-### Tabla: `instituciones_proveedoras`
+### Tabla: `instituciones_compradoras`
 
 | Campo | Tipo | Descripción |
 |-------|------|-------------|
@@ -33,13 +33,22 @@ Este sistema permite importar y gestionar información de instituciones que part
 
 ### Paso 1: Crear la tabla
 
+**IMPORTANTE:** Si ya creaste la tabla con el nombre antiguo `instituciones_proveedoras`, usa el script de renombrado primero:
+
 ```bash
-mysql -u usuario -p nombre_bd < sql/crear_tabla_instituciones_proveedoras.sql
+# Si YA tienes la tabla con nombre antiguo:
+mysql -u usuario -p nombre_bd < sql/renombrar_instituciones_proveedoras_a_compradoras.sql
+```
+
+**Si es la primera vez**, crea la tabla nueva:
+
+```bash
+mysql -u usuario -p nombre_bd < sql/crear_tabla_instituciones_compradoras.sql
 ```
 
 O ejecuta directamente el SQL:
 ```sql
-source /ruta/a/sql/crear_tabla_instituciones_proveedoras.sql
+source /ruta/a/sql/crear_tabla_instituciones_compradoras.sql
 ```
 
 ### Paso 2: Verificar la instalación
@@ -86,7 +95,7 @@ Cédula;Nombre Institucion;Direccion;Telefono;Representante;Codigo Postal;Provin
 
 ## 🔗 Integración con Licitaciones
 
-### Enlazar instituciones con licitaciones
+### Enlazar instituciones compradoras con licitaciones
 
 Una vez importadas las instituciones, puedes enlazarlas con licitaciones usando:
 
@@ -94,24 +103,24 @@ Una vez importadas las instituciones, puedes enlazarlas con licitaciones usando:
 // En licitacion_detalle.php
 $stmt = $conn->prepare("
     SELECT l.*,
-           ip.nombre_institucion,
-           ip.provincia,
-           ip.telefono
+           ic.nombre_institucion,
+           ic.provincia,
+           ic.telefono
     FROM licitaciones l
-    LEFT JOIN instituciones_proveedoras ip ON l.cedula_institucion = ip.cedula
+    LEFT JOIN instituciones_compradoras ic ON l.cedula_institucion = ic.cedula
     WHERE l.id = :id
 ");
 ```
 
-### Filtrar por institución
+### Filtrar por institución compradora
 
 ```php
 // En dashboard o búsqueda
 $stmt = $conn->prepare("
-    SELECT l.*, ip.nombre_institucion
+    SELECT l.*, ic.nombre_institucion
     FROM licitaciones l
-    LEFT JOIN instituciones_proveedoras ip ON l.cedula_institucion = ip.cedula
-    WHERE ip.cedula = :cedula_institucion
+    LEFT JOIN instituciones_compradoras ic ON l.cedula_institucion = ic.cedula
+    WHERE ic.cedula = :cedula_institucion
     ORDER BY l.fecha_apertura DESC
 ");
 ```
@@ -134,20 +143,20 @@ Verás:
 
 ```sql
 -- Total de instituciones
-SELECT COUNT(*) FROM instituciones_proveedoras;
+SELECT COUNT(*) FROM instituciones_compradoras;
 
 -- Instituciones por provincia
 SELECT provincia, COUNT(*) as total
-FROM instituciones_proveedoras
+FROM instituciones_compradoras
 WHERE provincia IS NOT NULL
 GROUP BY provincia
 ORDER BY total DESC;
 
 -- Buscar institución por cédula
-SELECT * FROM instituciones_proveedoras WHERE cedula = '3-101-654321';
+SELECT * FROM instituciones_compradoras WHERE cedula = '3-101-654321';
 
 -- Buscar institución por nombre
-SELECT * FROM instituciones_proveedoras WHERE nombre_institucion LIKE '%EDUCACIÓN%';
+SELECT * FROM instituciones_compradoras WHERE nombre_institucion LIKE '%EDUCACIÓN%';
 ```
 
 ## 🔧 Mantenimiento
@@ -164,17 +173,18 @@ Puedes reimportar el CSV completo sin problemas de duplicados.
 
 ```sql
 -- Eliminar instituciones sin nombre
-DELETE FROM instituciones_proveedoras WHERE nombre_institucion IS NULL;
+DELETE FROM instituciones_compradoras WHERE nombre_institucion IS NULL;
 
 -- Eliminar instituciones importadas antes de cierta fecha
-DELETE FROM instituciones_proveedoras WHERE fecha_importacion < '2024-01-01';
+DELETE FROM instituciones_compradoras WHERE fecha_importacion < '2024-01-01';
 ```
 
 ## 📁 Archivos del Sistema
 
 ```
 /sql/
-  └── crear_tabla_instituciones_proveedoras.sql    # Script de creación de tabla
+  ├── crear_tabla_instituciones_compradoras.sql              # Script de creación de tabla
+  └── renombrar_instituciones_proveedoras_a_compradoras.sql  # Script para renombrar tabla antigua
 
 /admin/
   ├── importador_instituciones.php                 # Importador web con formulario
