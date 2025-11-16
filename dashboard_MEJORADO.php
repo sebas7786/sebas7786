@@ -234,9 +234,9 @@ try {
     // CONSTRUIR CONSULTA SQL
     $params = [];
 
-    $sql = "SELECT DISTINCT l.id, l.*, ir.nombre_institucion, ir.zona_geografica
+    $sql = "SELECT DISTINCT l.id, l.*, ic.nombre_institucion, ic.provincia as zona_geografica
             FROM licitaciones l
-            LEFT JOIN instituciones_registradas ir ON l.cedula_institucion = ir.cedula";
+            LEFT JOIN instituciones_compradoras ic ON l.cedula_institucion = ic.cedula";
 
     // Si estamos en vista de intereses Y hay intereses configurados
     if ($vista === 'mis_intereses' && (!empty($codigos_interes) || !empty($palabras_clave))) {
@@ -365,10 +365,10 @@ try {
     $categorias_disponibles = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
     $stmt = $pdo->query("
-        SELECT DISTINCT ir.cedula, ir.nombre_institucion
-        FROM instituciones_registradas ir
-        INNER JOIN licitaciones l ON l.cedula_institucion = ir.cedula
-        ORDER BY ir.nombre_institucion
+        SELECT DISTINCT ic.cedula, ic.nombre_institucion
+        FROM instituciones_compradoras ic
+        INNER JOIN licitaciones l ON l.cedula_institucion = ic.cedula
+        ORDER BY ic.nombre_institucion
         LIMIT 200
     ");
     $instituciones_disponibles = $stmt->fetchAll(PDO::FETCH_ASSOC);
