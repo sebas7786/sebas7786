@@ -1002,54 +1002,85 @@ body {
             [ 7. Aclaraciones ]
         </div>
         <div class="sicop-section-body">
-            <p style="margin-bottom: 15px;">
-                <strong>Total de aclaraciones:</strong> <?php echo count($aclaraciones); ?>
+            <p style="margin-bottom: 10px; font-size: 13px;">
+                <strong>Total:</strong> <?php echo count($aclaraciones); ?>
                 <?php
                 $respondidas = array_filter($aclaraciones, function($acl) {
                     return !empty($acl['fecha_respuesta']) || strtolower($acl['estado_respuesta'] ?? '') === 'respondida';
                 });
                 $pendientes = count($aclaraciones) - count($respondidas);
                 ?>
-                <span style="margin-left: 15px; color: #28a745;">✓ Respondidas: <?php echo count($respondidas); ?></span>
-                <span style="margin-left: 10px; color: #dc3545;">⏳ Pendientes: <?php echo $pendientes; ?></span>
+                <span style="margin-left: 15px; color: #28a745;">✓ <?php echo count($respondidas); ?></span>
+                <span style="margin-left: 10px; color: #dc3545;">⏳ <?php echo $pendientes; ?></span>
             </p>
-            <table class="ofertas-table">
+            <table class="ofertas-table" style="font-size: 11px;">
                 <thead>
                     <tr>
-                        <th>Fecha Solicitud</th>
-                        <th>N° Aclaración</th>
-                        <th>Solicitante</th>
-                        <th>Cédula Empresa</th>
-                        <th>Estado</th>
-                        <th>N° Respuesta</th>
-                        <th>Fecha Respuesta</th>
+                        <th style="padding: 6px;">Fecha Sol.</th>
+                        <th style="padding: 6px;">N° Aclaración</th>
+                        <th style="padding: 6px;">Solicitante</th>
+                        <th style="padding: 6px;">Cédula</th>
+                        <th style="padding: 6px;">Estado</th>
+                        <th style="padding: 6px;">N° Resp.</th>
+                        <th style="padding: 6px;">Fecha Resp.</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($aclaraciones as $acl): ?>
                     <tr>
-                        <td><?php echo formatearFechaHora($acl['fecha_solicitud'] ?? ''); ?></td>
-                        <td><strong><?php echo htmlspecialchars($acl['numero_aclaracion'] ?? '-'); ?></strong></td>
-                        <td><?php echo htmlspecialchars($acl['solicitante'] ?? '-'); ?></td>
-                        <td><?php echo htmlspecialchars($acl['cedula_empresa_proveedora'] ?? '-'); ?></td>
-                        <td>
+                        <td style="padding: 6px; font-size: 11px;">
+                            <?php echo formatearFecha($acl['fecha_solicitud'] ?? ''); ?>
+                        </td>
+                        <td style="padding: 6px; font-size: 11px;">
+                            <strong>
+                            <?php
+                            $num_acl = $acl['numero_aclaracion'] ?? '-';
+                            // Convertir notación científica a número completo
+                            if (is_numeric($num_acl)) {
+                                echo number_format(floatval($num_acl), 0, '', '');
+                            } else {
+                                echo htmlspecialchars($num_acl);
+                            }
+                            ?>
+                            </strong>
+                        </td>
+                        <td style="padding: 6px; font-size: 11px;">
+                            <?php
+                            $solicitante = $acl['solicitante'] ?? '-';
+                            echo htmlspecialchars(mb_substr($solicitante, 0, 30)) . (mb_strlen($solicitante) > 30 ? '...' : '');
+                            ?>
+                        </td>
+                        <td style="padding: 6px; font-size: 11px;">
+                            <?php echo htmlspecialchars($acl['cedula_empresa_proveedora'] ?? '-'); ?>
+                        </td>
+                        <td style="padding: 6px;">
                             <?php
                             $estado_acl = strtolower($acl['estado_respuesta'] ?? '');
                             $tiene_respuesta = !empty($acl['fecha_respuesta']);
                             if ($tiene_respuesta || $estado_acl === 'respondida') {
-                                echo '<span class="estado-badge abierta" style="background-color: #d4edda; color: #155724;">✓ Respondida</span>';
+                                echo '<span style="display: inline-block; padding: 3px 8px; background-color: #d4edda; color: #155724; border-radius: 3px; font-size: 10px; font-weight: 600;">✓</span>';
                             } else {
-                                echo '<span class="estado-badge proximo" style="background-color: #fff3cd; color: #856404;">⏳ Pendiente</span>';
+                                echo '<span style="display: inline-block; padding: 3px 8px; background-color: #fff3cd; color: #856404; border-radius: 3px; font-size: 10px; font-weight: 600;">⏳</span>';
                             }
                             ?>
                         </td>
-                        <td><?php echo htmlspecialchars($acl['numero_respuesta'] ?? '-'); ?></td>
-                        <td>
+                        <td style="padding: 6px; font-size: 11px;">
+                            <?php
+                            $num_resp = $acl['numero_respuesta'] ?? '-';
+                            // Convertir notación científica a número completo
+                            if (is_numeric($num_resp)) {
+                                echo number_format(floatval($num_resp), 0, '', '');
+                            } else {
+                                echo htmlspecialchars($num_resp);
+                            }
+                            ?>
+                        </td>
+                        <td style="padding: 6px; font-size: 11px;">
                             <?php
                             if (!empty($acl['fecha_respuesta'])) {
-                                echo '<strong style="color: #28a745;">' . formatearFechaHora($acl['fecha_respuesta']) . '</strong>';
+                                echo '<strong style="color: #28a745;">' . formatearFecha($acl['fecha_respuesta']) . '</strong>';
                             } else {
-                                echo '<span style="color: #999;">Sin responder</span>';
+                                echo '<span style="color: #999; font-size: 10px;">-</span>';
                             }
                             ?>
                         </td>
