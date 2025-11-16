@@ -1,16 +1,17 @@
 <?php
 /**
  * ═══════════════════════════════════════════════════════════════════════
- * IMPORTADOR SICOP v14.3 - DETECCIÓN INTELIGENTE POR CONTENIDO
+ * IMPORTADOR SICOP v14.3 - CON SOPORTE PARA DETALLECARTELES
  * ═══════════════════════════════════════════════════════════════════════
  *
- * CORRECCIÓN v14.3:
- * - Detecta líneas por CONTENIDO, no por número de columnas
- * - Las líneas tienen 15 columnas pero solo usan las primeras 8
- * - Diferencia carteles de líneas por el contenido de las celdas
+ * NOVEDADES v14.3:
+ * - Soporte para 2 archivos: "Detalle de Carteles" + "DetalleCarteles"
+ * - Detección inteligente por contenido
+ * - Actualización inteligente con COALESCE (solo campos NULL)
+ * - Nuevos campos: tipo_procedimiento, modalidad, fecha_apertura, etc.
  *
- * @version 14.2
- * @date 2025-11-14
+ * @version 14.3
+ * @date 2025-11-16
  */
 
 ini_set('max_file_uploads', 20);
@@ -202,7 +203,7 @@ class ImportadorSICOPv14_3 {
 
     /**
      * ═══════════════════════════════════════════════════════════════════════
-     * IMPORTADOR PRINCIPAL
+     * IMPORTADOR PRINCIPAL - DETALLE DE CARTELES
      * ═══════════════════════════════════════════════════════════════════════
      */
     public function importarDetalleCartelesNuevo($archivo) {
@@ -438,14 +439,6 @@ class ImportadorSICOPv14_3 {
         }
     }
 
-    private function val($row, $indices, $key, $default = null) {
-        if (isset($indices[$key]) && isset($row[$indices[$key]])) {
-            $v = trim($row[$indices[$key]]);
-            return $v !== '' ? $v : $default;
-        }
-        return $default;
-    }
-
     /**
      * ═══════════════════════════════════════════════════════════════════════
      * IMPORTAR DETALLECARTELES (INFORMACIÓN ADICIONAL)
@@ -540,6 +533,14 @@ class ImportadorSICOPv14_3 {
             $this->stats['detalle_carteles']['errores']++;
         }
     }
+
+    private function val($row, $indices, $key, $default = null) {
+        if (isset($indices[$key]) && isset($row[$indices[$key]])) {
+            $v = trim($row[$indices[$key]]);
+            return $v !== '' ? $v : $default;
+        }
+        return $default;
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -583,6 +584,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo'])) {
     echo "<div class='header'><h1>🚀 Importación SICOP v14.3</h1><p class='version'>Con soporte para DetalleCarteles</p></div>";
     echo "<div class='content'>";
 
+    // Procesar archivo principal
     $archivo = $_FILES['archivo'];
     if ($archivo['error'] == 0) {
         $imp->importarDetalleCartelesNuevo($archivo['tmp_name']);
@@ -660,7 +662,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo'])) {
     }
 
     echo "<div style='text-align: center;'>";
-    echo "<a href='importador_sicop_v14_2.php' class='btn'>🔄 Nueva Importación</a>";
+    echo "<a href='importador_sicop_v14_3.php' class='btn'>🔄 Nueva Importación</a>";
     echo "</div>";
 
     echo "</div></div></body></html>";
@@ -684,7 +686,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo'])) {
             padding: 20px;
         }
         .container {
-            max-width: 700px;
+            max-width: 800px;
             width: 100%;
             background: #fff;
             border-radius: 12px;
@@ -701,26 +703,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo'])) {
         .header .version { font-size: 14px; opacity: 0.95; }
         .content { padding: 40px; }
         .upload-area {
-            border: 3px dashed #10b981;
+            border: 3px solid #10b981;
             border-radius: 12px;
-            padding: 50px 30px;
+            padding: 40px 30px;
             text-align: center;
             background: #f9fafb;
-            margin: 20px 0;
+            margin: 15px 0;
             cursor: pointer;
             transition: all 0.3s;
         }
         .upload-area:hover { border-color: #059669; background: #f3f4f6; }
-        .upload-area h3 { font-size: 20px; color: #333; margin-bottom: 12px; }
+        .upload-area.optional { border-style: dashed; opacity: 0.9; }
+        .upload-area h3 { font-size: 18px; color: #333; margin-bottom: 8px; }
+        .upload-area p { color: #666; font-size: 13px; margin: 8px 0; }
         input[type="file"] { display: none; }
         .file-label {
             display: inline-block;
-            padding: 12px 32px;
+            padding: 10px 28px;
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: #fff;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
+            font-size: 14px;
         }
         .btn-submit {
             width: 100%;
@@ -732,18 +737,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo'])) {
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
+            margin-top: 10px;
         }
         .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
         .highlight {
             background: #d1fae5;
             padding: 15px;
             border-radius: 8px;
-            margin: 15px 0;
+            margin: 20px 0;
             border-left: 4px solid #10b981;
         }
-        .highlight h4 { color: #059669; margin-bottom: 10px; }
+        .highlight h4 { color: #059669; margin-bottom: 10px; font-size: 16px; }
         .highlight ul { padding-left: 20px; color: #065f46; }
-        .highlight li { padding: 4px 0; }
+        .highlight li { padding: 3px 0; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -757,14 +763,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo'])) {
             <form method="POST" enctype="multipart/form-data">
                 <div class="upload-area" onclick="document.getElementById('fileInput').click()">
                     <h3>📁 Archivo 1: Detalle de Carteles (requerido)</h3>
-                    <p style="color: #666; margin: 10px 0;">Archivo principal con licitaciones y partidas</p>
+                    <p>Archivo principal con licitaciones y partidas</p>
                     <label for="fileInput" class="file-label">Examinar Archivo</label>
                     <input type="file" name="archivo" id="fileInput" accept=".csv" required>
                 </div>
 
-                <div class="upload-area" onclick="document.getElementById('fileInputDetalle').click()" style="border-style: dashed;">
+                <div class="upload-area optional" onclick="document.getElementById('fileInputDetalle').click()">
                     <h3>📋 Archivo 2: DetalleCarteles (opcional)</h3>
-                    <p style="color: #666; margin: 10px 0;">Información adicional de licitaciones</p>
+                    <p>Información adicional de licitaciones</p>
                     <label for="fileInputDetalle" class="file-label">Examinar Archivo (Opcional)</label>
                     <input type="file" name="archivo_detalle" id="fileInputDetalle" accept=".csv">
                 </div>
