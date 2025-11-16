@@ -66,6 +66,13 @@ ADD COLUMN IF NOT EXISTS `otros_impuestos` DECIMAL(15,4) NULL AFTER `iva`;
 ALTER TABLE `lineas_adjudicadas`
 ADD COLUMN IF NOT EXISTS `acarreos` DECIMAL(15,4) NULL AFTER `otros_impuestos`;
 
+-- Tipos de cambio
+ALTER TABLE `lineas_adjudicadas`
+ADD COLUMN IF NOT EXISTS `tipo_cambio_crc` DECIMAL(10,4) NULL AFTER `acarreos`;
+
+ALTER TABLE `lineas_adjudicadas`
+ADD COLUMN IF NOT EXISTS `tipo_cambio_dolar` DECIMAL(10,4) NULL AFTER `tipo_cambio_crc`;
+
 -- 4. AGREGAR índice único SI NO EXISTE
 -- Primero intentamos eliminarlo por si existe
 ALTER TABLE `lineas_adjudicadas`
