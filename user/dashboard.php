@@ -3,8 +3,8 @@
  * DASHBOARD MEJORADO - LicitaHoy
  *
  * Mejoras:
- * - Cálculo correcto del estado (abierta/cerrada/adjudicada) basado en fechas
  * - Detección automática de adjudicaciones desde tabla lineas_adjudicadas
+ * - Cálculo correcto del estado (abierta/cerrada/adjudicada) basado en fechas
  * - Visualización prominente del presupuesto
  * - Estadísticas en tiempo real
  * - Mejor UX y diseño
@@ -692,7 +692,6 @@ include_once "../includes/header.php";
             border-radius: 6px;
             font-size: 0.85rem;
             font-weight: 600;
-            margin-bottom: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
