@@ -240,10 +240,11 @@ try {
     // CONSTRUIR CONSULTA SQL CON DETECCIÓN DE ADJUDICACIONES
     $params = [];
 
-    $sql = "SELECT DISTINCT l.id, l.*,
+    $sql = "SELECT l.*,
             ic.nombre_institucion,
             ic.provincia as zona_geografica,
-            COUNT(DISTINCT la.id) as tiene_adjudicaciones
+            COUNT(DISTINCT la.id) as tiene_adjudicaciones,
+            GROUP_CONCAT(DISTINCT la.numero_linea ORDER BY la.numero_linea SEPARATOR ',') as lineas_adjudicadas_lista
             FROM licitaciones l
             LEFT JOIN instituciones_compradoras ic ON l.cedula_institucion = ic.cedula
             LEFT JOIN lineas_adjudicadas la ON la.numero_sicop = l.numero_sicop";
@@ -332,6 +333,13 @@ try {
     $stmt_all = $pdo->prepare($sql);
     $stmt_all->execute($params);
     $todas_licitaciones = $stmt_all->fetchAll();
+
+    // DEBUG: Log para verificar adjudicaciones
+    error_log("Dashboard SQL ejecutado. Total licitaciones: " . count($todas_licitaciones));
+    if (!empty($todas_licitaciones)) {
+        $ejemplo = $todas_licitaciones[0];
+        error_log("Ejemplo licitación ID: " . ($ejemplo['id'] ?? 'N/A') . " - tiene_adjudicaciones: " . ($ejemplo['tiene_adjudicaciones'] ?? '0'));
+    }
 
     // Calcular estadísticas REALES
     $total_abiertas = 0;
@@ -1121,17 +1129,25 @@ include_once "../includes/header.php";
                 ?>
                     <div class="licitacion-card <?php echo $clase_monto; ?>">
                         <div class="card-header">
-                            <span class="status-badge <?php echo $estado_real; ?>">
-                                <?php
-                                $iconos = [
-                                    'abierta' => 'circle-check',
-                                    'cerrada' => 'circle-xmark',
-                                    'adjudicada' => 'trophy'
-                                ];
-                                echo '<i class="fas fa-' . ($iconos[$estado_real] ?? 'circle') . '"></i> ';
-                                echo ucfirst($estado_real);
-                                ?>
-                            </span>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px;">
+                                <span class="status-badge <?php echo $estado_real; ?>">
+                                    <?php
+                                    $iconos = [
+                                        'abierta' => 'circle-check',
+                                        'cerrada' => 'circle-xmark',
+                                        'adjudicada' => 'trophy'
+                                    ];
+                                    echo '<i class="fas fa-' . ($iconos[$estado_real] ?? 'circle') . '"></i> ';
+                                    echo ucfirst($estado_real);
+                                    ?>
+                                </span>
+                                <?php if (!empty($lic['tiene_adjudicaciones']) && $lic['tiene_adjudicaciones'] > 0): ?>
+                                    <span class="status-badge" style="background: #f5f3ff; color: #7c3aed; border: 2px solid #8b5cf6;">
+                                        <i class="fas fa-award"></i>
+                                        <?php echo $lic['tiene_adjudicaciones']; ?> línea<?php echo $lic['tiene_adjudicaciones'] > 1 ? 's' : ''; ?> adjudicada<?php echo $lic['tiene_adjudicaciones'] > 1 ? 's' : ''; ?>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
                             <div class="card-title"><?php echo htmlspecialchars($lic['titulo'] ?? 'Sin título'); ?></div>
                             <div class="card-subtitle">
                                 <i class="fas fa-hashtag"></i>
