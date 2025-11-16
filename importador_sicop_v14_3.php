@@ -460,9 +460,15 @@ class ImportadorSICOPv14_3 {
                 $indices[trim($col)] = $idx;
             }
 
+            // UPDATE con TODOS los campos adicionales del DetalleCarteles
             $sql = "UPDATE licitaciones SET
+                    cedula_institucion = COALESCE(:cedula_institucion, cedula_institucion),
+                    numero_procedimiento = COALESCE(:numero_procedimiento, numero_procedimiento),
                     tipo_procedimiento = COALESCE(:tipo_procedimiento, tipo_procedimiento),
                     modalidad = COALESCE(:modalidad, modalidad),
+                    estado = COALESCE(:estado, estado),
+                    titulo = COALESCE(:cartel_nm, titulo),
+                    fecha_publicacion = COALESCE(:fecha_publicacion, fecha_publicacion),
                     fecha_apertura_ofertas = COALESCE(:fecha_apertura, fecha_apertura_ofertas),
                     clasificacion_objeto = COALESCE(:clas_obj, clasificacion_objeto),
                     codigo_excepcion = COALESCE(:cod_excepcion, codigo_excepcion),
@@ -484,6 +490,13 @@ class ImportadorSICOPv14_3 {
                         continue;
                     }
 
+                    // Procesar fechas
+                    $fecha_publicacion = null;
+                    $fecha_pub_raw = $this->val($row, $indices, 'FECHA_PUBLICACION');
+                    if (!empty($fecha_pub_raw)) {
+                        $fecha_publicacion = $this->convertirFechaHora($fecha_pub_raw);
+                    }
+
                     $fecha_apertura = null;
                     $fechah_apertura_raw = $this->val($row, $indices, 'FECHAH_APERTURA');
                     if (!empty($fechah_apertura_raw)) {
@@ -496,15 +509,33 @@ class ImportadorSICOPv14_3 {
                         $fecha_mod = $this->convertirFechaHora($fecha_mod_raw);
                     }
 
+                    // Procesar monto estimado
                     $monto_est = $this->limpiarNumero($this->val($row, $indices, 'MONTO_EST'));
 
+                    // Extraer valores
+                    $cedula_inst = $this->val($row, $indices, 'CEDULA_INSTITUCION');
+                    $nro_proc = $this->val($row, $indices, 'NRO_PROCEDIMIENTO');
+                    $tipo_proc = $this->val($row, $indices, 'TIPO_PROCEDIMIENTO');
+                    $modalidad = $this->val($row, $indices, 'MODALIDAD_PROCEDIMIENTO');
+                    $cartel_stat = $this->val($row, $indices, 'CARTEL_STAT');
+                    $cartel_nm = $this->val($row, $indices, 'CARTEL_NM');
+                    $clas_obj = $this->val($row, $indices, 'CLAS_OBJ');
+                    $cod_excepcion = $this->val($row, $indices, 'COD_EXCEPCION');
+                    $des_excepcion = $this->val($row, $indices, 'DES_EXCEPCION');
+
+                    // Bind parameters
                     $stmt->bindParam(':numero_sicop', $numero_sicop);
-                    $stmt->bindParam(':tipo_procedimiento', $this->val($row, $indices, 'TIPO_PROCEDIMIENTO'));
-                    $stmt->bindParam(':modalidad', $this->val($row, $indices, 'MODALIDAD_PROCEDIMIENTO'));
+                    $stmt->bindParam(':cedula_institucion', $cedula_inst);
+                    $stmt->bindParam(':numero_procedimiento', $nro_proc);
+                    $stmt->bindParam(':tipo_procedimiento', $tipo_proc);
+                    $stmt->bindParam(':modalidad', $modalidad);
+                    $stmt->bindParam(':estado', $cartel_stat);
+                    $stmt->bindParam(':cartel_nm', $cartel_nm);
+                    $stmt->bindParam(':fecha_publicacion', $fecha_publicacion);
                     $stmt->bindParam(':fecha_apertura', $fecha_apertura);
-                    $stmt->bindParam(':clas_obj', $this->val($row, $indices, 'CLAS_OBJ'));
-                    $stmt->bindParam(':cod_excepcion', $this->val($row, $indices, 'COD_EXCEPCION'));
-                    $stmt->bindParam(':des_excepcion', $this->val($row, $indices, 'DES_EXCEPCION'));
+                    $stmt->bindParam(':clas_obj', $clas_obj);
+                    $stmt->bindParam(':cod_excepcion', $cod_excepcion);
+                    $stmt->bindParam(':des_excepcion', $des_excepcion);
                     $stmt->bindParam(':monto_est', $monto_est);
                     $stmt->bindParam(':fecha_mod', $fecha_mod);
 
@@ -784,7 +815,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo'])) {
                 <h4>✅ Novedades en v14.3</h4>
                 <ul>
                     <li><strong>Soporte para 2 archivos:</strong> Importa "Detalle de Carteles" + "DetalleCarteles"</li>
-                    <li><strong>Información adicional:</strong> Tipo de procedimiento, modalidad, excepciones, etc.</li>
+                    <li><strong>Información completa:</strong> CARTEL_STAT, CARTEL_NM, MONTO_EST, TIPO_PROCEDIMIENTO, etc.</li>
+                    <li><strong>13 campos adicionales:</strong> Cédula, número procedimiento, estado, título, fechas, montos</li>
                     <li><strong>Actualización inteligente:</strong> Solo actualiza campos vacíos (COALESCE)</li>
                     <li><strong>Detección automática:</strong> Identifica líneas por contenido</li>
                     <li><strong>Notación científica:</strong> Maneja códigos como 7,81E+15</li>
