@@ -445,7 +445,6 @@ class ImportadorSICOPv14_3 {
         }
         return $default;
     }
-}
 
     /**
      * ═══════════════════════════════════════════════════════════════════════
@@ -541,6 +540,7 @@ class ImportadorSICOPv14_3 {
             $this->stats['detalle_carteles']['errores']++;
         }
     }
+}
 
 // ═══════════════════════════════════════════════════════════════════════
 // INTERFAZ
