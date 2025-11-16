@@ -1,7 +1,7 @@
 <?php
 /**
  * ═══════════════════════════════════════════════════════════════════════
- * IMPORTADOR DE LÍNEAS CONTRATADAS (ADJUDICADAS)
+ * IMPORTADOR DE LÍNEAS ADJUDICADAS
  * ═══════════════════════════════════════════════════════════════════════
  */
 
@@ -65,29 +65,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo'])) {
             }
 
             // SQL INSERT
-            $sql = "INSERT INTO lineas_contratadas (
-                numero_sicop, numero_linea_contrato, numero_linea_cartel,
-                numero_contrato, secuencia, cedula_proveedor, codigo_producto,
-                cantidad_contratada, precio_unitario, tipo_moneda,
-                descuento, iva, otros_impuestos, acarreos,
-                tipo_cambio_crc, tipo_cambio_dolar, numero_acto,
-                descripcion_producto, cantidad_aumentada, cantidad_disminuida,
-                monto_aumentado, monto_disminuido
+            $sql = "INSERT INTO lineas_adjudicadas (
+                numero_sicop, numero_oferta, codigo_producto, numero_linea,
+                numero_acto, cedula_proveedor, cantidad_adjudicada,
+                precio_unitario_adjudicado, tipo_moneda, descuento,
+                iva, otros_impuestos, acarreos, tipo_cambio_crc,
+                tipo_cambio_dolar
             ) VALUES (
-                :numero_sicop, :numero_linea_contrato, :numero_linea_cartel,
-                :numero_contrato, :secuencia, :cedula_proveedor, :codigo_producto,
-                :cantidad_contratada, :precio_unitario, :tipo_moneda,
-                :descuento, :iva, :otros_impuestos, :acarreos,
-                :tipo_cambio_crc, :tipo_cambio_dolar, :numero_acto,
-                :descripcion_producto, :cantidad_aumentada, :cantidad_disminuida,
-                :monto_aumentado, :monto_disminuido
+                :numero_sicop, :numero_oferta, :codigo_producto, :numero_linea,
+                :numero_acto, :cedula_proveedor, :cantidad_adjudicada,
+                :precio_unitario_adjudicado, :tipo_moneda, :descuento,
+                :iva, :otros_impuestos, :acarreos, :tipo_cambio_crc,
+                :tipo_cambio_dolar
             ) ON DUPLICATE KEY UPDATE
-                numero_linea_cartel = VALUES(numero_linea_cartel),
-                numero_contrato = VALUES(numero_contrato),
-                cedula_proveedor = VALUES(cedula_proveedor),
                 codigo_producto = VALUES(codigo_producto),
-                cantidad_contratada = VALUES(cantidad_contratada),
-                precio_unitario = VALUES(precio_unitario),
+                numero_acto = VALUES(numero_acto),
+                cedula_proveedor = VALUES(cedula_proveedor),
+                cantidad_adjudicada = VALUES(cantidad_adjudicada),
+                precio_unitario_adjudicado = VALUES(precio_unitario_adjudicado),
                 tipo_moneda = VALUES(tipo_moneda),
                 descuento = VALUES(descuento),
                 iva = VALUES(iva),
@@ -95,12 +90,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo'])) {
                 acarreos = VALUES(acarreos),
                 tipo_cambio_crc = VALUES(tipo_cambio_crc),
                 tipo_cambio_dolar = VALUES(tipo_cambio_dolar),
-                numero_acto = VALUES(numero_acto),
-                descripcion_producto = VALUES(descripcion_producto),
-                cantidad_aumentada = VALUES(cantidad_aumentada),
-                cantidad_disminuida = VALUES(cantidad_disminuida),
-                monto_aumentado = VALUES(monto_aumentado),
-                monto_disminuido = VALUES(monto_disminuido),
                 actualizado = CURRENT_TIMESTAMP";
 
             $stmt = $conn->prepare($sql);
@@ -118,27 +107,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo'])) {
                 try {
                     $ejecutado = $stmt->execute([
                         ':numero_sicop' => $numero_sicop,
-                        ':numero_linea_contrato' => obtenerValor($row, $indices, 'NRO_LINEA_CONTRATO'),
-                        ':numero_linea_cartel' => obtenerValor($row, $indices, 'NRO_LINEA_CARTEL'),
-                        ':numero_contrato' => obtenerValor($row, $indices, 'NRO_CONTRATO'),
-                        ':secuencia' => obtenerValor($row, $indices, 'SECUENCIA'),
-                        ':cedula_proveedor' => obtenerValor($row, $indices, 'CEDULA_PROVEEDOR'),
+                        ':numero_oferta' => obtenerValor($row, $indices, 'NRO_OFERTA'),
                         ':codigo_producto' => obtenerValor($row, $indices, 'CODIGO_PRODUCTO'),
-                        ':cantidad_contratada' => limpiarNumero(obtenerValor($row, $indices, 'CANTIDAD_CONTRATADA')),
-                        ':precio_unitario' => limpiarNumero(obtenerValor($row, $indices, 'PRECIO_UNITARIO')),
+                        ':numero_linea' => obtenerValor($row, $indices, 'NRO_LINEA'),
+                        ':numero_acto' => obtenerValor($row, $indices, 'NRO_ACTO'),
+                        ':cedula_proveedor' => obtenerValor($row, $indices, 'CEDULA_PROVEEDOR'),
+                        ':cantidad_adjudicada' => limpiarNumero(obtenerValor($row, $indices, 'CANTIDAD_ADJUDICADA')),
+                        ':precio_unitario_adjudicado' => limpiarNumero(obtenerValor($row, $indices, 'PRECIO_UNITARIO_ADJUDICADO')),
                         ':tipo_moneda' => obtenerValor($row, $indices, 'TIPO_MONEDA', 'CRC'),
                         ':descuento' => limpiarNumero(obtenerValor($row, $indices, 'DESCUENTO')),
                         ':iva' => limpiarNumero(obtenerValor($row, $indices, 'IVA')),
                         ':otros_impuestos' => limpiarNumero(obtenerValor($row, $indices, 'OTROS_IMPUESTOS')),
                         ':acarreos' => limpiarNumero(obtenerValor($row, $indices, 'ACARREOS')),
                         ':tipo_cambio_crc' => limpiarNumero(obtenerValor($row, $indices, 'TIPO_CAMBIO_CRC')),
-                        ':tipo_cambio_dolar' => limpiarNumero(obtenerValor($row, $indices, 'TIPO_CAMBIO_DOLAR')),
-                        ':numero_acto' => obtenerValor($row, $indices, 'NRO_ACTO'),
-                        ':descripcion_producto' => obtenerValor($row, $indices, 'DESC_PRODUCTO'),
-                        ':cantidad_aumentada' => limpiarNumero(obtenerValor($row, $indices, 'cantidad_aumentada')),
-                        ':cantidad_disminuida' => limpiarNumero(obtenerValor($row, $indices, 'cantidad_disminuida')),
-                        ':monto_aumentado' => limpiarNumero(obtenerValor($row, $indices, 'monto_aumentado')),
-                        ':monto_disminuido' => limpiarNumero(obtenerValor($row, $indices, 'monto_disminuido'))
+                        ':tipo_cambio_dolar' => limpiarNumero(obtenerValor($row, $indices, 'TIPO_CAMBIO_DOLAR'))
                     ]);
 
                     if ($ejecutado) {
@@ -165,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Importar Líneas Contratadas</title>
+    <title>Importar Líneas Adjudicadas</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -298,8 +280,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo'])) {
 <body>
     <div class="container">
         <div class="header">
-            <h1>📋 Líneas Contratadas</h1>
-            <p class="subtitle">Importador de líneas adjudicadas SICOP</p>
+            <h1>🏆 Líneas Adjudicadas</h1>
+            <p class="subtitle">Importador de adjudicaciones SICOP</p>
         </div>
 
         <div class="content">
@@ -321,8 +303,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo'])) {
                         </div>
                     </div>
                     <div style="margin-top: 25px;">
-                        <a href="importar_lineas_contratadas.php" class="btn-link">🔄 Nueva Importación</a>
-                        <a href="verificar_lineas_contratadas.php" class="btn-link">📊 Ver Estadísticas</a>
+                        <a href="importar_lineas_adjudicadas.php" class="btn-link">🔄 Nueva Importación</a>
+                        <a href="verificar_lineas_adjudicadas.php" class="btn-link">📊 Ver Estadísticas</a>
                     </div>
                 </div>
 
@@ -331,24 +313,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['archivo'])) {
                     <h3>❌ Error en la Importación</h3>
                     <p><?= isset($error_msg) ? htmlspecialchars($error_msg) : 'Error desconocido' ?></p>
                     <div style="margin-top: 20px;">
-                        <a href="importar_lineas_contratadas.php" class="btn-link">🔄 Intentar de Nuevo</a>
+                        <a href="importar_lineas_adjudicadas.php" class="btn-link">🔄 Intentar de Nuevo</a>
                     </div>
                 </div>
 
             <?php else: ?>
                 <div class="info-box">
-                    <strong>📋 Campos del CSV LineasContratadas:</strong><br>
-                    NRO_SICOP, NRO_LINEA_CONTRATO, NRO_LINEA_CARTEL, NRO_CONTRATO, SECUENCIA,
-                    CEDULA_PROVEEDOR, CODIGO_PRODUCTO, CANTIDAD_CONTRATADA, PRECIO_UNITARIO,
-                    TIPO_MONEDA, DESCUENTO, IVA, OTROS_IMPUESTOS, ACARREOS, TIPO_CAMBIO_CRC,
-                    TIPO_CAMBIO_DOLAR, NRO_ACTO, DESC_PRODUCTO, cantidad_aumentada,
-                    cantidad_disminuida, monto_aumentado, monto_disminuido
+                    <strong>📋 Campos del CSV LineasAdjudicadas:</strong><br>
+                    NRO_SICOP, NRO_OFERTA, CODIGO_PRODUCTO, NRO_LINEA, NRO_ACTO,
+                    CEDULA_PROVEEDOR, CANTIDAD_ADJUDICADA, PRECIO_UNITARIO_ADJUDICADO,
+                    TIPO_MONEDA, DESCUENTO, IVA, OTROS_IMPUESTOS, ACARREOS,
+                    TIPO_CAMBIO_CRC, TIPO_CAMBIO_DOLAR
                 </div>
 
                 <form method="POST" enctype="multipart/form-data" id="uploadForm">
                     <div class="upload-area" onclick="document.getElementById('fileInput').click()">
                         <h3>📁 Selecciona el archivo CSV</h3>
-                        <p style="color: #666; margin: 10px 0;">LineasContratadas.csv</p>
+                        <p style="color: #666; margin: 10px 0;">LineasAdjudicadas.csv</p>
                         <label for="fileInput" class="file-label">Examinar Archivo</label>
                         <input type="file" name="archivo" id="fileInput" accept=".csv" required>
                     </div>

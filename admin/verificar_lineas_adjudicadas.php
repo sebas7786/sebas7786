@@ -1,44 +1,44 @@
 <?php
 /**
  * ═══════════════════════════════════════════════════════════════════════
- * VERIFICADOR DE LINEAS CONTRATADAS
+ * VERIFICADOR DE LÍNEAS ADJUDICADAS
  * ═══════════════════════════════════════════════════════════════════════
  */
 
 require_once __DIR__ . '/../config/db.php';
 
 // Obtener estadísticas
-$total = $conn->query("SELECT COUNT(*) FROM lineas_contratadas")->fetchColumn();
+$total = $conn->query("SELECT COUNT(*) FROM lineas_adjudicadas")->fetchColumn();
 
 $por_moneda = $conn->query("
     SELECT tipo_moneda, COUNT(*) as total
-    FROM lineas_contratadas
+    FROM lineas_adjudicadas
     GROUP BY tipo_moneda
     ORDER BY total DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 $top_proveedores = $conn->query("
     SELECT
-        lc.cedula_proveedor,
+        la.cedula_proveedor,
         p.nombre_proveedor,
         COUNT(*) as total_lineas,
-        SUM(lc.cantidad_contratada * lc.precio_unitario) as monto_total
-    FROM lineas_contratadas lc
-    LEFT JOIN proveedoras p ON lc.cedula_proveedor = p.cedula
-    GROUP BY lc.cedula_proveedor
+        SUM(la.cantidad_adjudicada * la.precio_unitario_adjudicado) as monto_total
+    FROM lineas_adjudicadas la
+    LEFT JOIN proveedoras p ON la.cedula_proveedor = p.cedula
+    GROUP BY la.cedula_proveedor
     ORDER BY total_lineas DESC
     LIMIT 10
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 $por_licitacion = $conn->query("
     SELECT
-        lc.numero_sicop,
+        la.numero_sicop,
         l.titulo,
         COUNT(*) as lineas_adjudicadas,
-        SUM(lc.cantidad_contratada * lc.precio_unitario) as monto_total
-    FROM lineas_contratadas lc
-    LEFT JOIN licitaciones l ON lc.numero_sicop = l.numero_sicop
-    GROUP BY lc.numero_sicop
+        SUM(la.cantidad_adjudicada * la.precio_unitario_adjudicado) as monto_total
+    FROM lineas_adjudicadas la
+    LEFT JOIN licitaciones l ON la.numero_sicop = l.numero_sicop
+    GROUP BY la.numero_sicop
     ORDER BY lineas_adjudicadas DESC
     LIMIT 10
 ")->fetchAll(PDO::FETCH_ASSOC);
@@ -47,21 +47,21 @@ $stats_generales = $conn->query("
     SELECT
         COUNT(DISTINCT numero_sicop) as licitaciones_con_adjudicaciones,
         COUNT(DISTINCT cedula_proveedor) as proveedores_adjudicados,
-        SUM(cantidad_contratada) as cantidad_total,
-        AVG(precio_unitario) as precio_promedio
-    FROM lineas_contratadas
+        SUM(cantidad_adjudicada) as cantidad_total,
+        AVG(precio_unitario_adjudicado) as precio_promedio
+    FROM lineas_adjudicadas
 ")->fetch(PDO::FETCH_ASSOC);
 
 // Últimas 20 líneas importadas
 $ultimas = $conn->query("
     SELECT
-        lc.*,
+        la.*,
         l.titulo as titulo_licitacion,
         p.nombre_proveedor
-    FROM lineas_contratadas lc
-    LEFT JOIN licitaciones l ON lc.numero_sicop = l.numero_sicop
-    LEFT JOIN proveedoras p ON lc.cedula_proveedor = p.cedula
-    ORDER BY lc.fecha_importacion DESC
+    FROM lineas_adjudicadas la
+    LEFT JOIN licitaciones l ON la.numero_sicop = l.numero_sicop
+    LEFT JOIN proveedoras p ON la.cedula_proveedor = p.cedula
+    ORDER BY la.fecha_importacion DESC
     LIMIT 20
 ")->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -69,7 +69,7 @@ $ultimas = $conn->query("
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Verificar Líneas Contratadas</title>
+    <title>Verificar Líneas Adjudicadas</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -178,14 +178,14 @@ $ultimas = $conn->query("
 <body>
     <div class="container">
         <div class="header">
-            <h1>📋 Líneas Contratadas - Estadísticas</h1>
+            <h1>🏆 Líneas Adjudicadas - Estadísticas</h1>
             <p class="subtitle">Visualización de adjudicaciones SICOP</p>
         </div>
 
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-number"><?= number_format($total) ?></div>
-                <div class="stat-label">Total Líneas</div>
+                <div class="stat-label">Total Líneas Adjudicadas</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number"><?= number_format($stats_generales['licitaciones_con_adjudicaciones']) ?></div>
@@ -280,24 +280,22 @@ $ultimas = $conn->query("
                         <th>SICOP</th>
                         <th>Línea</th>
                         <th>Proveedor</th>
-                        <th>Producto</th>
                         <th>Cantidad</th>
                         <th>Precio Unit.</th>
                         <th>Moneda</th>
+                        <th>Oferta</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($ultimas as $row): ?>
                     <tr>
                         <td><?= htmlspecialchars($row['numero_sicop']) ?></td>
-                        <td><?= htmlspecialchars($row['numero_linea_cartel']) ?></td>
-                        <td>
-                            <?= htmlspecialchars($row['nombre_proveedor'] ?: $row['cedula_proveedor']) ?>
-                        </td>
-                        <td><?= htmlspecialchars(substr($row['descripcion_producto'] ?? 'N/A', 0, 40)) ?></td>
-                        <td><?= number_format($row['cantidad_contratada'], 2) ?></td>
-                        <td>₡<?= number_format($row['precio_unitario'], 2) ?></td>
+                        <td><?= htmlspecialchars($row['numero_linea']) ?></td>
+                        <td><?= htmlspecialchars($row['nombre_proveedor'] ?: $row['cedula_proveedor']) ?></td>
+                        <td><?= number_format($row['cantidad_adjudicada'], 2) ?></td>
+                        <td>₡<?= number_format($row['precio_unitario_adjudicado'], 2) ?></td>
                         <td><span class="badge badge-primary"><?= htmlspecialchars($row['tipo_moneda']) ?></span></td>
+                        <td><?= htmlspecialchars($row['numero_oferta']) ?></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -305,7 +303,7 @@ $ultimas = $conn->query("
         </div>
 
         <div style="text-align: center; margin-top: 30px;">
-            <a href="importar_lineas_contratadas.php" class="btn">🔄 Nueva Importación</a>
+            <a href="importar_lineas_adjudicadas.php" class="btn">🔄 Nueva Importación</a>
         </div>
     </div>
 </body>
