@@ -18,10 +18,10 @@ try {
     $stmt = $conn->prepare("
         SELECT l.*,
                (SELECT COUNT(*) FROM alertas WHERE id_usuario = :user_id AND id_licitacion = l.id AND favorito = 1) as es_favorito,
-               ir.nombre_institucion,
-               ir.zona_geografica
+               ic.nombre_institucion,
+               ic.provincia as zona_geografica
         FROM licitaciones l
-        LEFT JOIN instituciones_registradas ir ON l.cedula_institucion = ir.cedula
+        LEFT JOIN instituciones_compradoras ic ON l.cedula_institucion = ic.cedula
         WHERE l.id = :id
     ");
     $stmt->bindParam(':id', $licitacion_id);
