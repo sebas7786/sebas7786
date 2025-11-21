@@ -108,14 +108,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $estado_pago = intval($_POST['estado_pago']);
             $notas_pago = $_POST['notas_pago'] ?? '';
 
-            $stmt = $conn->prepare("UPDATE usuarios SET
-                                    monto_pagar = ?,
-                                    fecha_proximo_pago = ?,
-                                    estado_pago = ?,
-                                    notas_pago = ?
-                                    WHERE id = ?");
+            // Si está marcando como "Al día", activar el usuario automáticamente
+            $activo = ($estado_pago == 1) ? 1 : null;
 
-            if ($stmt->execute([$monto_pagar, $fecha_proximo_pago, $estado_pago, $notas_pago, $user_id])) {
+            if ($activo !== null) {
+                $stmt = $conn->prepare("UPDATE usuarios SET
+                                        monto_pagar = ?,
+                                        fecha_proximo_pago = ?,
+                                        estado_pago = ?,
+                                        activo = ?,
+                                        notas_pago = ?
+                                        WHERE id = ?");
+                $params = [$monto_pagar, $fecha_proximo_pago, $estado_pago, $activo, $notas_pago, $user_id];
+            } else {
+                $stmt = $conn->prepare("UPDATE usuarios SET
+                                        monto_pagar = ?,
+                                        fecha_proximo_pago = ?,
+                                        estado_pago = ?,
+                                        notas_pago = ?
+                                        WHERE id = ?");
+                $params = [$monto_pagar, $fecha_proximo_pago, $estado_pago, $notas_pago, $user_id];
+            }
+
+            if ($stmt->execute($params)) {
                 // Registrar en historial solo si la tabla existe
                 if ($tablas_existen) {
                     try {
@@ -128,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 }
 
-                $mensaje = "Estado de pago actualizado correctamente";
+                $mensaje = "Estado de pago actualizado correctamente" . ($activo == 1 ? " - Usuario activado" : "");
                 $tipo_mensaje = "success";
             } else {
                 $mensaje = "Error al actualizar el estado de pago";
@@ -151,30 +166,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                        VALUES (?, ?, ?, ?, ?, 'pagado', ?, ?)");
 
                 if ($stmt->execute([$user_id, $monto_recibido, $fecha_pago, $metodo_pago, $referencia, $notas, $_SESSION['usuario_id']])) {
-                    // Actualizar estado del usuario
+                    // Actualizar estado del usuario Y ACTIVARLO
                     $stmt_update = $conn->prepare("UPDATE usuarios SET
                                                   estado_pago = 1,
+                                                  activo = 1,
                                                   ultimo_pago = ?,
                                                   monto_ultimo_pago = ?
                                                   WHERE id = ?");
                     $stmt_update->execute([$fecha_pago, $monto_recibido, $user_id]);
 
-                    $mensaje = "Pago registrado exitosamente";
+                    $mensaje = "Pago registrado exitosamente - Usuario activado automáticamente";
                     $tipo_mensaje = "success";
                 } else {
                     $mensaje = "Error al registrar el pago";
                     $tipo_mensaje = "error";
                 }
             } else {
-                // Solo actualizar el usuario
+                // Solo actualizar el usuario Y ACTIVARLO
                 $stmt_update = $conn->prepare("UPDATE usuarios SET
                                               estado_pago = 1,
+                                              activo = 1,
                                               ultimo_pago = ?,
                                               monto_ultimo_pago = ?
                                               WHERE id = ?");
                 $stmt_update->execute([$fecha_pago, $monto_recibido, $user_id]);
 
-                $mensaje = "Pago registrado (tabla historial_pagos no disponible)";
+                $mensaje = "Pago registrado exitosamente - Usuario activado automáticamente (tabla historial_pagos no disponible)";
                 $tipo_mensaje = "success";
             }
         }
