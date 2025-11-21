@@ -32,16 +32,16 @@ define('SO_BASE_URL', 'https://expenicrhs.com/SO');
 define('SO_SITE_URL', 'https://expenicrhs.com');
 
 // Rutas de archivos
-define('SO_UPLOAD_PATH', $_SERVER['DOCUMENT_ROOT'] . '/SO/uploads/');
+define('SO_UPLOAD_PATH', __DIR__ . '/uploads/');
 define('SO_LESIONES_PATH', SO_UPLOAD_PATH . 'lesiones/');
 define('SO_AREAS_PATH', SO_UPLOAD_PATH . 'areas/');
 
 // Crear directorios si no existen
 if (!file_exists(SO_LESIONES_PATH)) {
-    mkdir(SO_LESIONES_PATH, 0755, true);
+    @mkdir(SO_LESIONES_PATH, 0755, true);
 }
 if (!file_exists(SO_AREAS_PATH)) {
-    mkdir(SO_AREAS_PATH, 0755, true);
+    @mkdir(SO_AREAS_PATH, 0755, true);
 }
 
 // Configuración de archivos
@@ -56,9 +56,9 @@ define('SO_ALLOWED_FILE_TYPES', [
 // Set timezone
 date_default_timezone_set('America/Costa_Rica');
 
-// Error reporting
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// Error reporting (desactivado en producción)
+error_reporting(0);
+ini_set('display_errors', 0);
 
 // CSRF Protection
 if (empty($_SESSION['csrf_token'])) {
