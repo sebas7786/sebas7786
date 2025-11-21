@@ -392,64 +392,28 @@ unset($_SESSION['form_data']);
                     <h2 class="seccion-titulo">5. Parte del Cuerpo Afectada</h2>
 
                     <div class="form-group">
-                        <label class="required">Seleccione la(s) parte(s) del cuerpo afectada(s)</label>
-                        <div class="checkbox-group">
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="parte_cabeza" name="partes_cuerpo[]" value="Cabeza">
-                                <label for="parte_cabeza">Cabeza</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="parte_cuello" name="partes_cuerpo[]" value="Cuello">
-                                <label for="parte_cuello">Cuello</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="parte_espalda" name="partes_cuerpo[]" value="Espalda">
-                                <label for="parte_espalda">Espalda</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="parte_hombro" name="partes_cuerpo[]" value="Hombro">
-                                <label for="parte_hombro">Hombro</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="parte_brazo" name="partes_cuerpo[]" value="Brazo">
-                                <label for="parte_brazo">Brazo</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="parte_codo" name="partes_cuerpo[]" value="Codo">
-                                <label for="parte_codo">Codo</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="parte_mano" name="partes_cuerpo[]" value="Mano">
-                                <label for="parte_mano">Mano</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="parte_dedos" name="partes_cuerpo[]" value="Dedos">
-                                <label for="parte_dedos">Dedos</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="parte_cadera" name="partes_cuerpo[]" value="Cadera">
-                                <label for="parte_cadera">Cadera</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="parte_pierna" name="partes_cuerpo[]" value="Pierna">
-                                <label for="parte_pierna">Pierna</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="parte_rodilla" name="partes_cuerpo[]" value="Rodilla">
-                                <label for="parte_rodilla">Rodilla</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="parte_tobillo" name="partes_cuerpo[]" value="Tobillo">
-                                <label for="parte_tobillo">Tobillo</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="parte_pie" name="partes_cuerpo[]" value="Pie">
-                                <label for="parte_pie">Pie</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="parte_otra" name="partes_cuerpo[]" value="Otra">
-                                <label for="parte_otra">Otra</label>
-                            </div>
+                        <label class="required">Haga clic en la(s) parte(s) del cuerpo afectada(s)</label>
+                        <p class="help-text" style="margin-bottom: 15px;">Haga clic directamente en el cuerpo humano para seleccionar las partes afectadas. Las partes seleccionadas se marcarán en rojo.</p>
+
+                        <!-- Selector Visual del Cuerpo -->
+                        <div id="body-selector"></div>
+
+                        <!-- Checkboxes ocultos para el envío del formulario -->
+                        <div style="display: none;">
+                            <input type="checkbox" id="parte_cabeza" name="partes_cuerpo[]" value="Cabeza">
+                            <input type="checkbox" id="parte_cuello" name="partes_cuerpo[]" value="Cuello">
+                            <input type="checkbox" id="parte_espalda" name="partes_cuerpo[]" value="Espalda">
+                            <input type="checkbox" id="parte_hombro" name="partes_cuerpo[]" value="Hombro">
+                            <input type="checkbox" id="parte_brazo" name="partes_cuerpo[]" value="Brazo">
+                            <input type="checkbox" id="parte_codo" name="partes_cuerpo[]" value="Codo">
+                            <input type="checkbox" id="parte_mano" name="partes_cuerpo[]" value="Mano">
+                            <input type="checkbox" id="parte_dedos" name="partes_cuerpo[]" value="Dedos">
+                            <input type="checkbox" id="parte_cadera" name="partes_cuerpo[]" value="Cadera">
+                            <input type="checkbox" id="parte_pierna" name="partes_cuerpo[]" value="Pierna">
+                            <input type="checkbox" id="parte_rodilla" name="partes_cuerpo[]" value="Rodilla">
+                            <input type="checkbox" id="parte_tobillo" name="partes_cuerpo[]" value="Tobillo">
+                            <input type="checkbox" id="parte_pie" name="partes_cuerpo[]" value="Pie">
+                            <input type="checkbox" id="parte_otra" name="partes_cuerpo[]" value="Otra">
                         </div>
                     </div>
 
@@ -708,5 +672,8 @@ unset($_SESSION['form_data']);
         // Establecer fecha máxima para el incidente (no puede ser futura)
         document.getElementById('fecha_incidente').max = new Date().toISOString().split('T')[0];
     </script>
+
+    <!-- Body Selector Script -->
+    <script src="body_selector.js"></script>
 </body>
 </html>
