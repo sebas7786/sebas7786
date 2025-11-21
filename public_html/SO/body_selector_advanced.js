@@ -260,14 +260,14 @@ class BodySelectorAdvanced {
 
                 <!-- Panel de selección -->
                 <div class="selected-parts-panel">
-                    <h3 class="panel-title">🎯 Partes Seleccionadas</h3>
+                    <h3 class="panel-title">Partes Seleccionadas</h3>
                     <div id="selected-parts-display-advanced"></div>
                     <div class="panel-actions">
                         <button type="button" class="btn-clear-advanced" onclick="bodySelectorAdvanced.clearAll()">
-                            🗑️ Limpiar Todo
+                            Limpiar Selección
                         </button>
                         <div class="selection-count">
-                            <span id="selection-count">0</span> parte(s) seleccionada(s)
+                            <span id="selection-count">0</span> parte(s)
                         </div>
                     </div>
                 </div>
@@ -283,40 +283,40 @@ class BodySelectorAdvanced {
             style.id = 'body-selector-advanced-styles';
             style.textContent = `
                 .body-selector-advanced-wrapper {
-                    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-                    border-radius: 20px;
-                    padding: 30px;
-                    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+                    background: #f8f9fa;
+                    border-radius: 8px;
+                    padding: 25px;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                    border: 1px solid #e0e0e0;
                 }
 
                 .body-views-container {
                     display: grid;
                     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-                    gap: 30px;
-                    margin-bottom: 30px;
+                    gap: 20px;
+                    margin-bottom: 20px;
                 }
 
                 .body-view {
                     background: white;
-                    border-radius: 15px;
-                    padding: 20px;
-                    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-                    transition: transform 0.3s ease;
+                    border-radius: 6px;
+                    padding: 15px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+                    border: 1px solid #e0e0e0;
                 }
 
                 .body-view:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
                 }
 
                 .view-title {
                     text-align: center;
                     color: #2c3e50;
-                    font-size: 18px;
-                    font-weight: 700;
-                    margin-bottom: 15px;
-                    padding-bottom: 10px;
-                    border-bottom: 3px solid #667eea;
+                    font-size: 16px;
+                    font-weight: 600;
+                    margin-bottom: 12px;
+                    padding-bottom: 8px;
+                    border-bottom: 2px solid #34495e;
                 }
 
                 .body-svg-advanced {
@@ -327,33 +327,20 @@ class BodySelectorAdvanced {
 
                 .body-part-advanced {
                     cursor: pointer;
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+                    transition: all 0.2s ease;
                 }
 
                 .body-part-advanced:hover {
-                    fill: #ffe0b2 !important;
-                    stroke: #ff9800 !important;
-                    stroke-width: 3 !important;
-                    filter: drop-shadow(0 4px 12px rgba(255, 152, 0, 0.5));
-                    transform: scale(1.05);
+                    fill: #fff8e1 !important;
+                    stroke: #546e7a !important;
+                    stroke-width: 2.5 !important;
+                    opacity: 0.85;
                 }
 
                 .body-part-advanced.selected {
-                    fill: #ffcdd2 !important;
-                    stroke: #e53935 !important;
-                    stroke-width: 3 !important;
-                    filter: drop-shadow(0 4px 15px rgba(229, 57, 53, 0.6));
-                    animation: pulse 2s infinite;
-                }
-
-                @keyframes pulse {
-                    0%, 100% {
-                        filter: drop-shadow(0 4px 15px rgba(229, 57, 53, 0.6));
-                    }
-                    50% {
-                        filter: drop-shadow(0 4px 20px rgba(229, 57, 53, 0.9));
-                    }
+                    fill: #ef9a9a !important;
+                    stroke: #c62828 !important;
+                    stroke-width: 2.5 !important;
                 }
 
                 .body-label-advanced {
@@ -385,28 +372,31 @@ class BodySelectorAdvanced {
 
                 .selected-parts-panel {
                     background: white;
-                    border-radius: 15px;
-                    padding: 25px;
-                    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+                    border-radius: 6px;
+                    padding: 20px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+                    border: 1px solid #e0e0e0;
                 }
 
                 .panel-title {
                     color: #2c3e50;
-                    font-size: 20px;
-                    font-weight: 700;
-                    margin-bottom: 20px;
-                    text-align: center;
+                    font-size: 16px;
+                    font-weight: 600;
+                    margin-bottom: 15px;
+                    text-align: left;
+                    border-bottom: 1px solid #e0e0e0;
+                    padding-bottom: 10px;
                 }
 
                 #selected-parts-display-advanced {
-                    min-height: 120px;
+                    min-height: 100px;
                     max-height: 300px;
                     overflow-y: auto;
-                    margin-bottom: 20px;
-                    padding: 15px;
-                    background: #f8f9fa;
-                    border-radius: 10px;
-                    border: 2px dashed #dee2e6;
+                    margin-bottom: 15px;
+                    padding: 12px;
+                    background: #fafafa;
+                    border-radius: 4px;
+                    border: 1px solid #e0e0e0;
                 }
 
                 #selected-parts-display-advanced::-webkit-scrollbar {
@@ -419,35 +409,36 @@ class BodySelectorAdvanced {
                 }
 
                 #selected-parts-display-advanced::-webkit-scrollbar-thumb {
-                    background: #667eea;
-                    border-radius: 10px;
+                    background: #999;
+                    border-radius: 4px;
                 }
 
                 .selected-part-tag-advanced {
                     display: inline-flex;
                     align-items: center;
-                    gap: 8px;
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    color: white;
-                    padding: 10px 15px;
-                    border-radius: 25px;
-                    margin: 5px;
-                    font-size: 13px;
-                    font-weight: 600;
-                    box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
-                    transition: all 0.3s ease;
+                    gap: 6px;
+                    background: #e3f2fd;
+                    color: #1565c0;
+                    padding: 6px 12px;
+                    border-radius: 4px;
+                    margin: 4px;
+                    font-size: 12px;
+                    font-weight: 500;
+                    border: 1px solid #90caf9;
+                    transition: all 0.2s ease;
                 }
 
                 .selected-part-tag-advanced:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+                    background: #bbdefb;
+                    border-color: #64b5f6;
                 }
 
                 .selected-part-tag-advanced .side-badge {
-                    background: rgba(255,255,255,0.3);
-                    padding: 2px 8px;
-                    border-radius: 12px;
-                    font-size: 10px;
+                    background: #1565c0;
+                    color: white;
+                    padding: 2px 6px;
+                    border-radius: 3px;
+                    font-size: 9px;
                 }
 
                 .panel-actions {
@@ -459,55 +450,48 @@ class BodySelectorAdvanced {
 
                 .btn-clear-advanced {
                     flex: 1;
-                    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+                    background: #dc3545;
                     color: white;
                     border: none;
-                    padding: 12px 20px;
-                    border-radius: 10px;
+                    padding: 10px 16px;
+                    border-radius: 4px;
                     cursor: pointer;
-                    font-size: 14px;
-                    font-weight: 700;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+                    font-size: 13px;
+                    font-weight: 500;
+                    transition: background 0.2s ease;
                 }
 
                 .btn-clear-advanced:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+                    background: #c82333;
                 }
 
                 .btn-clear-advanced:active {
-                    transform: translateY(0);
+                    background: #bd2130;
                 }
 
                 .selection-count {
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    color: white;
-                    padding: 12px 20px;
-                    border-radius: 10px;
-                    font-weight: 700;
-                    font-size: 14px;
+                    background: #f8f9fa;
+                    color: #495057;
+                    padding: 10px 16px;
+                    border-radius: 4px;
+                    font-weight: 500;
+                    font-size: 13px;
                     text-align: center;
-                    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+                    border: 1px solid #dee2e6;
                 }
 
                 .selection-count span {
-                    font-size: 20px;
-                    font-weight: 900;
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: #1565c0;
                 }
 
                 .empty-selection {
                     text-align: center;
-                    color: #999;
+                    color: #6c757d;
                     font-style: italic;
-                    padding: 40px 20px;
-                }
-
-                .empty-selection::before {
-                    content: "👆";
-                    display: block;
-                    font-size: 48px;
-                    margin-bottom: 15px;
+                    padding: 30px 20px;
+                    font-size: 13px;
                 }
 
                 @media (max-width: 768px) {
