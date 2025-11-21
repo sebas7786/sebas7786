@@ -4,6 +4,15 @@
 
 El selector visual de partes del cuerpo es un componente interactivo que permite a los usuarios seleccionar visualmente las partes del cuerpo afectadas en un accidente laboral haciendo clic directamente en una figura humana.
 
+## 🆕 Versión 2.0 (Advanced)
+
+Esta versión mejorada incluye:
+- **Dos vistas del cuerpo:** Frontal y posterior para una selección más precisa
+- **Apariencia realista:** Degradado de piel natural con efectos de sombra
+- **57 partes seleccionables:** Mayor detalle con específicación izquierda/derecha
+- **Animaciones avanzadas:** Efectos de pulso en partes seleccionadas
+- **Mapeo inteligente:** Sistema que convierte selecciones detalladas a categorías del formulario
+
 ---
 
 ## ✨ Características
@@ -36,18 +45,20 @@ El selector visual de partes del cuerpo es un componente interactivo que permite
 
 ## 🔧 Componentes del Sistema
 
-### 1. **body_selector.js**
+### 1. **body_selector_advanced.js**
 Archivo JavaScript principal que contiene:
-- Clase `BodySelector`
-- Renderizado del SVG del cuerpo humano
-- Lógica de selección/deselección
+- Clase `BodySelectorAdvanced`
+- Renderizado de dos SVG del cuerpo humano (frontal y posterior)
+- Vista realista con degradado de piel
+- Más de 50 partes del cuerpo seleccionables
+- Lógica de selección/deselección con animaciones
 - Actualización de checkboxes ocultos
-- Gestión del estado
+- Gestión del estado con mapeo inteligente
 
 ### 2. **Modificación en nuevo_aviso.php**
-- Contenedor `<div id="body-selector"></div>`
+- Contenedor `<div id="body-selector-advanced"></div>`
 - Checkboxes ocultos para envío del formulario
-- Carga del script `body_selector.js`
+- Carga del script `body_selector_advanced.js`
 - Instrucciones de uso
 
 ---
@@ -73,22 +84,68 @@ Checkboxes ocultos (sincronizados) → POST al servidor → Procesamiento normal
 
 ## 📐 Partes del Cuerpo Disponibles
 
-El selector incluye **14 partes del cuerpo:**
+### 🔴 Vista Frontal (26 partes)
+1. ✅ **Cabeza** - Región craneal completa
+2. ✅ **Cara** - Rostro
+3. ✅ **Cuello** - Zona cervical frontal
+4. ✅ **Pecho** - Torso anterior
+5. ✅ **Abdomen** - Zona abdominal
+6. ✅ **Hombro Izquierdo** - Articulación superior izquierda
+7. ✅ **Hombro Derecho** - Articulación superior derecha
+8. ✅ **Brazo Izquierdo** - Brazo superior izquierdo
+9. ✅ **Brazo Derecho** - Brazo superior derecho
+10. ✅ **Codo Izquierdo** - Articulación del codo izquierdo
+11. ✅ **Codo Derecho** - Articulación del codo derecho
+12. ✅ **Antebrazo Izquierdo** - Parte inferior del brazo izquierdo
+13. ✅ **Antebrazo Derecho** - Parte inferior del brazo derecho
+14. ✅ **Muñeca Izquierda** - Articulación de la muñeca izquierda
+15. ✅ **Muñeca Derecha** - Articulación de la muñeca derecha
+16. ✅ **Mano Izquierda** - Mano izquierda completa
+17. ✅ **Mano Derecha** - Mano derecha completa
+18. ✅ **Dedos Izquierdos** - Dedos de la mano izquierda
+19. ✅ **Dedos Derechos** - Dedos de la mano derecha
+20. ✅ **Cadera** - Región pélvica
+21. ✅ **Ingle** - Zona inguinal
+22. ✅ **Muslo Izquierdo** - Parte superior de la pierna izquierda
+23. ✅ **Muslo Derecho** - Parte superior de la pierna derecha
+24. ✅ **Rodilla Izquierda** - Articulación de la rodilla izquierda
+25. ✅ **Rodilla Derecha** - Articulación de la rodilla derecha
+26. ✅ **Pantorrilla Izquierda** - Parte inferior de la pierna izquierda
+27. ✅ **Pantorrilla Derecha** - Parte inferior de la pierna derecha
+28. ✅ **Tobillo Izquierdo** - Articulación del tobillo izquierdo
+29. ✅ **Tobillo Derecho** - Articulación del tobillo derecho
+30. ✅ **Pie Izquierdo** - Pie izquierdo completo
+31. ✅ **Pie Derecho** - Pie derecho completo
+32. ✅ **Dedos Pie Izquierdo** - Dedos del pie izquierdo
+33. ✅ **Dedos Pie Derecho** - Dedos del pie derecho
 
-1. ✅ **Cabeza** - Región craneal
-2. ✅ **Cuello** - Zona cervical
-3. ✅ **Espalda** - Torso posterior
-4. ✅ **Hombro** - Ambos hombros (izquierdo y derecho)
-5. ✅ **Brazo** - Ambos brazos completos
-6. ✅ **Codo** - Ambos codos
-7. ✅ **Mano** - Ambas manos
-8. ✅ **Dedos** - Dedos de ambas manos
-9. ✅ **Cadera** - Región pélvica
-10. ✅ **Pierna** - Ambas piernas completas
-11. ✅ **Rodilla** - Ambas rodillas
-12. ✅ **Tobillo** - Ambos tobillos
-13. ✅ **Pie** - Ambos pies
-14. ✅ **Otra** - Opción personalizable
+### 🔵 Vista Posterior (24 partes)
+1. ✅ **Nuca** - Parte posterior de la cabeza
+2. ✅ **Cuello Posterior** - Zona cervical posterior
+3. ✅ **Hombros Posteriores** - Ambos hombros (vista posterior)
+4. ✅ **Espalda Alta** - Parte superior de la espalda
+5. ✅ **Espalda Media** - Parte media de la espalda
+6. ✅ **Lumbar** - Zona lumbar (espalda baja)
+7. ✅ **Glúteos** - Región glútea
+8. ✅ **Brazo Posterior Izquierdo** - Parte posterior del brazo izquierdo
+9. ✅ **Brazo Posterior Derecho** - Parte posterior del brazo derecho
+10. ✅ **Codo Posterior Izquierdo** - Parte posterior del codo izquierdo
+11. ✅ **Codo Posterior Derecho** - Parte posterior del codo derecho
+12. ✅ **Antebrazo Posterior Izquierdo** - Parte posterior del antebrazo izquierdo
+13. ✅ **Antebrazo Posterior Derecho** - Parte posterior del antebrazo derecho
+14. ✅ **Mano Posterior Izquierda** - Vista posterior de la mano izquierda
+15. ✅ **Mano Posterior Derecha** - Vista posterior de la mano derecha
+16. ✅ **Muslo Posterior Izquierdo** - Parte posterior del muslo izquierdo
+17. ✅ **Muslo Posterior Derecho** - Parte posterior del muslo derecho
+18. ✅ **Rodilla Posterior Izquierda** - Parte posterior de la rodilla izquierda
+19. ✅ **Rodilla Posterior Derecha** - Parte posterior de la rodilla derecha
+20. ✅ **Gemelo Izquierdo** - Pantorrilla izquierda (vista posterior)
+21. ✅ **Gemelo Derecho** - Pantorrilla derecha (vista posterior)
+22. ✅ **Talón Izquierdo** - Parte posterior del pie izquierdo
+23. ✅ **Talón Derecho** - Parte posterior del pie derecho
+24. ✅ **Otra** - Opción personalizable
+
+**Total: 57 partes del cuerpo seleccionables**
 
 ---
 
@@ -107,7 +164,7 @@ El selector incluye **14 partes del cuerpo:**
 ### HTML
 ```html
 <!-- Contenedor donde se renderiza el selector -->
-<div id="body-selector"></div>
+<div id="body-selector-advanced"></div>
 
 <!-- Checkboxes ocultos (sincronizados automáticamente) -->
 <div style="display: none;">
@@ -120,43 +177,45 @@ El selector incluye **14 partes del cuerpo:**
 ### JavaScript
 ```javascript
 // Inicialización automática al cargar la página
-let bodySelector;
+let bodySelectorAdvanced;
 document.addEventListener('DOMContentLoaded', function() {
-    bodySelector = new BodySelector('body-selector');
+    if (document.getElementById('body-selector-advanced')) {
+        bodySelectorAdvanced = new BodySelectorAdvanced('body-selector-advanced');
+    }
 });
 
 // Obtener partes seleccionadas
-const partesSeleccionadas = bodySelector.getSelectedParts();
-console.log(partesSeleccionadas); // ["Cabeza", "Brazo", "Pierna"]
+const partesSeleccionadas = bodySelectorAdvanced.getSelectedParts();
+console.log(partesSeleccionadas); // ["Cabeza", "Brazo Izquierdo", "Rodilla Derecha"]
 
 // Limpiar selección
-bodySelector.clearAll();
+bodySelectorAdvanced.clearAll();
 ```
 
 ---
 
-## 🎛️ Métodos de la Clase BodySelector
+## 🎛️ Métodos de la Clase BodySelectorAdvanced
 
 ### `constructor(containerId)`
-Inicializa el selector en el contenedor especificado.
+Inicializa el selector avanzado en el contenedor especificado.
 
 ### `render()`
-Renderiza el SVG del cuerpo humano y la interfaz.
+Renderiza dos SVG del cuerpo humano (frontal y posterior) con apariencia realista y la interfaz completa.
 
-### `togglePart(element, partName)`
-Selecciona o deselecciona una parte del cuerpo.
+### `togglePart(element, partName, side)`
+Selecciona o deselecciona una parte específica del cuerpo. El parámetro `side` indica si es la vista frontal o posterior.
 
 ### `updateDisplay()`
-Actualiza la lista visual de partes seleccionadas.
+Actualiza la lista visual de partes seleccionadas con contador y etiquetas coloridas.
 
 ### `updateHiddenCheckboxes()`
-Sincroniza los checkboxes ocultos con las partes seleccionadas.
+Sincroniza los checkboxes ocultos con las partes seleccionadas usando un sistema de mapeo inteligente que convierte las 57 partes detalladas a las 14 categorías principales del formulario.
 
 ### `clearAll()`
-Limpia toda la selección.
+Limpia toda la selección en ambas vistas (frontal y posterior).
 
 ### `getSelectedParts()`
-Retorna un array con las partes seleccionadas.
+Retorna un array con las partes seleccionadas detalladas (ej: ["Cabeza", "Brazo Izquierdo", "Rodilla Derecha"]).
 
 ---
 
@@ -277,18 +336,27 @@ Edita el archivo `body_selector.js` en la sección `addStyles()`:
 
 ---
 
-## 🚀 Mejoras Futuras
+## 🚀 Características Implementadas y Mejoras Futuras
 
-Posibles mejoras para versiones futuras:
+### ✅ Implementado (Versión Advanced)
+- [x] Vista frontal y posterior del cuerpo
+- [x] Apariencia realista con degradado de piel
+- [x] 57 partes del cuerpo seleccionables
+- [x] Animaciones suaves y efectos visuales
+- [x] Contador de partes seleccionadas
+- [x] Sistema de mapeo inteligente para sincronización con formulario
+- [x] Diseño responsive para móviles y tablets
+- [x] Feedback visual con hover y selección
 
-- [ ] Vista frontal y posterior del cuerpo
-- [ ] Intensidad de la lesión por parte
-- [ ] Anotaciones personalizadas
-- [ ] Exportar imagen con partes marcadas
-- [ ] Historial de lesiones previas
+### 🔮 Posibles Mejoras Futuras
+- [ ] Intensidad de la lesión por parte (leve, moderada, grave)
+- [ ] Anotaciones personalizadas en cada parte
+- [ ] Exportar imagen PNG/PDF con partes marcadas
+- [ ] Historial de lesiones previas del empleado
 - [ ] Integración con reportes médicos
-- [ ] Múltiples niveles de lesión (leve, moderada, grave)
-- [ ] Zoom en partes específicas
+- [ ] Zoom en partes específicas para mayor detalle
+- [ ] Vista 3D rotativa del cuerpo humano
+- [ ] Indicadores de tipo de lesión (corte, golpe, quemadura, etc.)
 
 ---
 
@@ -304,6 +372,7 @@ Para reportar problemas o sugerir mejoras, contacta al equipo de desarrollo.
 
 ---
 
-**Versión:** 1.0
+**Versión:** 2.0 (Advanced)
 **Última actualización:** Noviembre 2024
 **Autor:** Sistema de Salud Ocupacional
+**Archivo:** body_selector_advanced.js

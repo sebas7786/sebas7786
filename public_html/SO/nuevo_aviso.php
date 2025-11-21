@@ -396,7 +396,7 @@ unset($_SESSION['form_data']);
                         <p class="help-text" style="margin-bottom: 15px;">Haga clic directamente en el cuerpo humano para seleccionar las partes afectadas. Las partes seleccionadas se marcarán en rojo.</p>
 
                         <!-- Selector Visual del Cuerpo -->
-                        <div id="body-selector"></div>
+                        <div id="body-selector-advanced"></div>
 
                         <!-- Checkboxes ocultos para el envío del formulario -->
                         <div style="display: none;">
@@ -673,7 +673,7 @@ unset($_SESSION['form_data']);
         document.getElementById('fecha_incidente').max = new Date().toISOString().split('T')[0];
     </script>
 
-    <!-- Body Selector Script -->
-    <script src="body_selector.js"></script>
+    <!-- Body Selector Advanced Script -->
+    <script src="body_selector_advanced.js"></script>
 </body>
 </html>
