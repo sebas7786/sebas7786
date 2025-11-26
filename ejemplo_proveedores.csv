@@ -1,0 +1,11 @@
+cedula_proveedor,nombre_proveedor,tipo_proveedor,tamano_proveedor,fecha_constitucion,zona_geo_prov,direccion,telefono,email,sitio_web,actividad_economica,codigo_actividad,estado_proveedor
+3-101-123456,Empresa Ejemplo S.A.,Jurídica,Mediana,2015-01-15,San José,"San José, Avenida Central, Edificio Torre Ejemplo",2222-3333,contacto@ejemplo.com,https://www.ejemplo.com,Servicios de construcción,4120,Activo
+1-0234-5678,Juan Pérez Solano,Física,Micro,,Heredia,"Heredia, Calle 5",8888-9999,juan@correo.com,,Consultoría independiente,,Activo
+3-102-654321,Constructora ABC S.A.,Jurídica,Grande,2010-03-20,Cartago,"Cartago, Zona Industrial",2444-5555,info@abc.com,https://www.abc.cr,Construcción de edificios,4100,Activo
+3-103-789012,Suministros XYZ Ltda,Jurídica,Pequeña,2018-07-10,Alajuela,"Alajuela, Centro Comercial Plaza",2430-1111,ventas@xyz.com,https://www.xyz.co.cr,Venta al por mayor de materiales de construcción,4663,Activo
+2-0345-6789,María González Ramírez,Física,Micro,,Puntarenas,"Puntarenas, Barrio El Carmen",8777-4444,maria.gonzalez@email.com,,Servicios profesionales,,Activo
+3-104-234567,Tecnología Digital S.A.,Jurídica,Mediana,2016-11-05,San José,"San José, Escazú, Centro Corporativo",2201-7777,info@tecdigital.com,https://www.tecdigital.cr,Programación informática,6201,Activo
+3-105-345678,Servicios Integrales CR S.A.,Jurídica,Grande,2008-02-14,San José,"San José, Sabana Norte",2290-5555,contacto@servicios.cr,https://www.servicios.cr,Actividades combinadas de servicios administrativos,8211,Activo
+1-0456-7890,Carlos Rodríguez López,Física,Pequeña,,Limón,"Limón, Centro",2758-3333,carlos.rodriguez@correo.com,,Transporte de carga,4923,Activo
+3-106-456789,Importadora Global S.A.,Jurídica,Grande,2012-09-30,Heredia,"Heredia, Zona Franca",2237-8888,ventas@importadora.cr,https://www.importadora.com,Venta al por mayor de productos diversos,4690,Activo
+3-107-567890,Consultoría Empresarial CR Ltda,Jurídica,Pequeña,2019-04-22,San José,"San José, Rohrmoser",2232-9999,info@consultoria.cr,https://www.consultoria.co.cr,Actividades de consultoría de gestión,7020,Activo
